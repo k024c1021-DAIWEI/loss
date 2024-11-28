@@ -1,0 +1,16 @@
+{
+  "name": "忘れ物チェック",
+  "version": "1.0.0",
+  "description": "Webapp for checking forgotten items and sending emails.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "multer": "^1.4.2",
+    "nodemailer": "^6.9.1"
+  },
+  "author": "Your Name",
+  "license": "MIT"
+}

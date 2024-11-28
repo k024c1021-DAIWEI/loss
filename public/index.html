@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>忘れ物</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* 画像プレビューのスタイル */
+        #image-preview img {
+            max-width: 300px;
+            max-height: 200px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 戻るボタンリンクの更新 -->
+        <a href="https://aad7e7f1-198c-49f0-92b8-08ccccbed0b7-00-1qdkygoo8xhjl.sisko.replit.dev/" class="back-button">戻る</a>
+        <h1>忘れ物</h1>
+
+        <!-- メモ内容入力欄 -->
+        <textarea id="note" placeholder="メモを入力してください"></textarea>
+
+        <!-- ファイル選択ボタン -->
+        <button id="file-button" onclick="document.getElementById('file-input').click();">ファイルを選択</button>
+        <input type="file" id="file-input" style="display: none;" accept="image/*" />
+
+        <!-- 画像プレビュー -->
+        <div id="image-preview">
+            <img src="" alt="画像プレビュー" id="preview-img" />
+        </div>
+
+        <div class="button-container">
+            <button id="send-button" disabled>送信</button>
+            <button id="note-button">メモ保存</button>
+        </div>
+    </div>
+
+    <script>
+        // ファイル選択後に画像をプレビュー
+        document.getElementById('file-input').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const img = document.getElementById('preview-img');
+                img.src = e.target.result;
+            };
+
+            if (file) {
+                reader.readAsDataURL(file);
+                document.getElementById('send-button').disabled = false;  // ファイル選択後に「送信」ボタンを有効化
+            } else {
+                document.getElementById('send-button').disabled = true; // ファイル未選択時にボタンを無効化
+            }
+        });
+
+        // メモ保存ボタンの処理
+        document.getElementById('note-button').addEventListener('click', async () => {
+            try {
+                const response = await fetch('https://5f844138-3427-4b22-9c67-5117f99888b9-00-2jci6svpxozho.sisko.replit.dev/');
+                if (!response.ok) throw new Error('データの取得に失敗しました');
+
+                const data = await response.json();
+                const { 社員番号, 部屋番号 } = data;
+
+                // メモ内容に社員番号と部屋番号を挿入
+                document.getElementById('note').value = `社員番号: ${社員番号}\n部屋番号: ${部屋番号}\n\n追加情報を記載してください:`;
+            } catch (error) {
+                alert(`エラー: ${error.message}`);
+            }
+        });
+
+        // 送信ボタンの処理
+        document.getElementById('send-button').addEventListener('click', async () => {
+            const fileInput = document.getElementById('file-input');
+            const email = prompt('メールアドレスを入力してください:');
+            const note = document.getElementById('note').value;
+
+            // メールアドレスのバリデーション
+            if (!email || !validateEmail(email)) {
+                alert('有効なメールアドレスを入力してください');
+                return;
+            }
+
+            // メモ内容のバリデーション
+            if (!note.trim()) {
+                alert('メモ内容を入力してください');
+                return;
+            }
+
+            // フォームデータの作成
+            const formData = new FormData();
+            if (fileInput.files[0]) formData.append('image', fileInput.files[0]);
+            formData.append('email', email);
+            formData.append('note', note);
+
+            // サーバーに送信
+            try {
+                const response = await fetch('/send', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.text();
+                alert(result);
+            } catch (error) {
+                alert(`送信エラー: ${error.message}`);
+            }
+        });
+
+        // メールアドレスの簡単なバリデーション
+        function validateEmail(email) {
+            const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            return regex.test(email);
+        }
+    </script>
+</body>
+</html>
