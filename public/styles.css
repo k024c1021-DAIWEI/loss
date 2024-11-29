@@ -100,10 +100,10 @@ button:disabled {
     position: absolute; /* 親要素(container)の左上に配置 */
     top: 20px;
     left: 20px;
-    padding: 10px 15px;
+    padding: 10px 20px;
     background-color: #ff5e57;
     color: #ffffff;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     border: none;
     border-radius: 8px;
@@ -114,6 +114,26 @@ button:disabled {
 
 .back-button:hover {
     background-color: #cc4b44; /* ホバー時の色変更 */
+    transform: translateY(-2px); /* 少し浮き上がる */
+}
+
+/* 備品ボタン */
+.forgot-button {
+    position: absolute; /* 画面右上に配置 */
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #ffbb33;
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.forgot-button:hover {
+    background-color: #e68a00; /* ホバー時の色変更 */
     transform: translateY(-2px); /* 少し浮き上がる */
 }
 
